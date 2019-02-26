@@ -1,0 +1,2 @@
+resistor values
+20K, 30.9k, 41.2k
