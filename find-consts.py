@@ -22,22 +22,30 @@ with open("trans.csv") as f:
 
 ic_exp = np.array(ie_exp) - np.array(ib_exp)
 
-valid = 350
+valid = (100, 350)
 
 def ic_f(Vbe, Ut, Is):
   return Is * (np.exp(Vbe/Ut) - 1)
 
-params = curve_fit(lambda Vbe, Ut, Is: np.log(ic_f(Vbe, Ut, Is)), vb_exp[:valid], np.log(ic_exp[:valid]))
+params = curve_fit(lambda Vbe, Ut, Is: np.log(ic_f(Vbe, Ut, Is)), vb_exp[:valid[1]], np.log(ic_exp[:valid[1]]))
 Ut, Is = params[0][0], params[0][1]
+
+def ib_f(Vbe, β):
+  return (Is/β) * (np.exp(Vbe/Ut) - 1)
+
+params = curve_fit(lambda Vbe, β: np.log(ib_f(Vbe, β)), vb_exp[valid[0]:valid[1]], np.log(ib_exp[valid[0]:valid[1]]))
+β = params[0][0]
 
 fig = plt.figure()
 ax = plt.subplot(111)
 ax.semilogy(vb_exp, ib_exp, 'b.', label="Measured base current")
 ax.semilogy(vb_exp, ie_exp, 'g.', label="Measured emitter current")
 ax.semilogy(vb_exp, ic_exp, 'r.', label="Calculated collector current")
-ax.semilogy(vb_exp, ic_f(vb_exp, params[0][0], params[0][1]), 'k-', label="Theoretical collectur current (Ut = %.4g, Is = %.4g)" % (Ut, Is))
+ax.semilogy(vb_exp, ic_f(vb_exp, Ut, Is), 'k-', label="Theoretical collector current (Ut = %.4g, Is = %.4g)" % (Ut, Is))
+ax.semilogy(vb_exp, ib_f(vb_exp, β), 'k--', label="Theoretical base current (Ut = %.4g, Is = %.4g, β = %.4g)" % (Ut, Is, β))
 
-ax.axvline(vb_exp[valid])
+ax.axvline(vb_exp[valid[0]])
+ax.axvline(vb_exp[valid[1]])
 
 plt.title("Transistor base voltage and currents")
 plt.xlabel("Voltage (V)")
