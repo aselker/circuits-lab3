@@ -27,7 +27,7 @@ for val in res:
             Ibtmp += [float(row[1])]
             Ietmp += [-float(row[2])]
         Ictmp = np.array(Ietmp) - np.array(Ibtmp)
-        Icmodel = Is*np.exp((np.array(Vtmp)-R*np.array(Ietmp))/Ut)
+        Icmodel = Is*np.exp((np.array(Vtmp)-R*np.array(Ietmp))/Ut)#
         V[val] = Vtmp
         Ib[val] = Ibtmp
         Ie[val] = Ietmp
@@ -41,8 +41,8 @@ i = 1
 for val in res:
     ax = plt.subplot(3,1,i)
 
-    ax.semilogy(V[val],Ic[val])
-    ax.semilogy(V[val],Icmod[val])
+    ax.plot(V[val],Ic[val])
+    #ax.plot(V[val],Icmod[val])
     #ax.plot(V[val],Ie[val])
     i += 1
     plt.xlabel('Base Voltage (V)')
