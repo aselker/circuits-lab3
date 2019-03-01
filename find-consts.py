@@ -36,6 +36,7 @@ def ib_f(Vbe, β):
 
 params = curve_fit(lambda Vbe, β: np.log(ib_f(Vbe, β)), vb_exp[valid[0]:valid[1]], np.log(ib_exp[valid[0]:valid[1]]))
 β = params[0][0]
+print("Ut = %g, Is = %g, β = %g" % (Ut, Is, β))
 
 fig = plt.figure()
 ax = plt.subplot(111)
