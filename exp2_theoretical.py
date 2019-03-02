@@ -62,17 +62,29 @@ for j in range(3):
 fig = plt.figure()
 ax = plt.subplot(111)
 
+# Joined semilog V-I plot
 for i in range(3):
-  # ax.semilogy(vb_exp[i], ib_exp[i], ['rx', 'gx', 'bx'][i], label="Base current (" + rnames[i] + " Ohms)")
-  # ax.semilogy(vb_exp[i], ie_exp[i], ['rx', 'gx', 'bx'][i], label="Emitter current (" + rnames[i] + " Ohms)")
-  ax.semilogy(vb_exp[i], ic_exp[i], ['r.', 'g.', 'b.'][i], label="Measured collector current (" + rnames[i] + " Ohms)")
-  ax.semilogy(vb_exp[i], ic_t[i], ['k--', 'k-.', 'k:'][i], label="Theoretical collector current (" + rnames[i] + " Ohms)")
+  ax.semilogy(vb_exp[i], ic_exp[i], ['r.', 'g.', 'b.'][i], label="Measured collector current (" + rnames[i] + " Ω)")
+  ax.semilogy(vb_exp[i], ic_t[i], ['k--', 'k-.', 'k:'][i], label="Theoretical collector current (" + rnames[i] + "Ω)")
 
 plt.title("Emitter-Degenerated Collector Current")
 plt.xlabel("Base voltage (V)")
 plt.ylabel("Collector current (A)")
 plt.grid(True)
 ax.legend()
-plt.show()
-# plt.savefig("exp2_ic.pdf")
+plt.savefig("exp2_ic_all.pdf")
+ax.cla()
+
+
+# Separate linear V-I plots
+for i in range(3):
+  ax.plot(vb_exp[i], ic_exp[i], ['r.', 'g.', 'b.'][i], label="Measured collector current")
+  ax.plot(vb_exp[i], ic_t[i], ['k--', 'k-.', 'k:'][i], label="Theoretical collector current")
+  plt.title("Emitter-Degenerated Collector Current (" + rnames[i] + " Ω)")
+  plt.xlabel("Base voltage (V)")
+  plt.ylabel("Collector current (A)")
+  plt.grid(True)
+  ax.legend()
+  plt.savefig("exp2_ic_" + rnames[i] + ".pdf")
+  ax.cla()
 
