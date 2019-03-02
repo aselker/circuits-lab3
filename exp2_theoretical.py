@@ -57,7 +57,7 @@ for j in range(3):
   ie_t[j] = [ie_f(vbe[0] - vbe[1]) for vbe in zip(vb_exp[j], ve_t[j])]
   ic_t[j] = [ic_f(vbe[0] - vbe[1]) for vbe in zip(vb_exp[j], ve_t[j])]
 
-
+"""
 for j in range(3):
   r = [1000, 10000, 100000][j]
   def ir_f(Ve):
@@ -78,14 +78,7 @@ for j in range(3):
 
   params = curve_fit(lambda Vb, Ut, Is, β: [np.log(ic_f(this_Vb, Ut, Is, β)) for this_Vb in Vb], vb_exp[j], np.log(ic_exp[j]))
   print(params)
-  # curve_fit(ic_f, vb_exp[j], ic_exp[j])
-
-  # def f_temp(x, a, b): return b * ( np.exp(x/a) - 1)
-
-  #def f_temp(x, n): return ic_f(x, n, 1, 1)
-  #print(curve_fit(lambda x, n: [f_temp(xx, n) for xx in x], vb_exp[j], ic_exp[j]))
-  # print(ic_f(0,0,1,1))
-
+"""
 
 fig = plt.figure()
 ax = plt.subplot(111)
