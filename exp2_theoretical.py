@@ -16,7 +16,7 @@ for i in range(3):
     with open('trans_exp2_%s.csv' % rnames[i]) as f:
         c = csv.reader(f, delimiter=",")
         next(c)
-        for _ in range(0): # Throw away bad data
+        for _ in range(600): # Throw away bad data
           next(c)
         for row in c:
           vb_exp[i] += [float(row[0])]
@@ -41,6 +41,7 @@ def ie_f(Vbe): return ic_f(Vbe) + ib_f(Vbe)
 
 ve_t = [[],[],[]]
 ie_t = [[],[],[]]
+ic_t = [[],[],[]]
 for j in range(3):
   r = [1000, 10000, 100000][j]
 
@@ -56,23 +57,22 @@ for j in range(3):
     ve_t[j] += [minimize(lambda Ve: err(vb, Ve), 0, method='Nelder-Mead').x[0]]
 
   ie_t[j] = [ie_f(vbe[0] - vbe[1]) for vbe in zip(vb_exp[j], ve_t[j])]
+  ic_t[j] = [ic_f(vbe[0] - vbe[1]) for vbe in zip(vb_exp[j], ve_t[j])]
 
 fig = plt.figure()
 ax = plt.subplot(111)
 
 for i in range(3):
-  ax.semilogy(vb_exp[i], ib_exp[i], ['r.', 'g.', 'b.'][i], label="Base current (" + rnames[i] + " Ohms)")
-  ax.semilogy(vb_exp[i], ie_exp[i], ['rx', 'gx', 'bx'][i], label="Emitter current (" + rnames[i] + " Ohms)")
-  # ax.semilogy(vb_exp[i], ve_t[i], ['k--', 'k-.', 'k:'][i], label="Theoretical emitter voltage (" + rnames[i] + " Ohms)")
-  ax.semilogy(vb_exp[i], ie_t[i], ['k--', 'k-.', 'k:'][i], label="Theoretical emitter current (" + rnames[i] + " Ohms)")
+  # ax.semilogy(vb_exp[i], ib_exp[i], ['rx', 'gx', 'bx'][i], label="Base current (" + rnames[i] + " Ohms)")
+  # ax.semilogy(vb_exp[i], ie_exp[i], ['rx', 'gx', 'bx'][i], label="Emitter current (" + rnames[i] + " Ohms)")
+  ax.semilogy(vb_exp[i], ic_exp[i], ['r.', 'g.', 'b.'][i], label="Measured collector current (" + rnames[i] + " Ohms)")
+  ax.semilogy(vb_exp[i], ic_t[i], ['k--', 'k-.', 'k:'][i], label="Theoretical collector current (" + rnames[i] + " Ohms)")
 
-
-
-plt.title("Something")
-plt.xlabel("Voltage (V)")
-plt.ylabel("Current (A)")
+plt.title("Emitter-Degenerated Collector Current")
+plt.xlabel("Base voltage (V)")
+plt.ylabel("Collector current (A)")
 plt.grid(True)
 ax.legend()
 plt.show()
-# plt.savefig("exp2_theoretical.pdf")
+# plt.savefig("exp2_ic.pdf")
 
