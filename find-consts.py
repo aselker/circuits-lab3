@@ -50,7 +50,7 @@ ax.axvline(vb_exp[valid[0]])
 ax.axvline(vb_exp[valid[1]])
 
 plt.title("Transistor base voltage and currents")
-plt.xlabel("Voltage (V)")
+plt.xlabel("Base voltage (V)")
 plt.ylabel("Current (A)")
 plt.grid(True)
 ax.legend()
