@@ -5,6 +5,7 @@ import numpy as np
 from numpy.polynomial.polynomial import polyfit
 import matplotlib.pyplot as plt
 from scipy.optimize import minimize, curve_fit
+from scipy.special import lambertw
 
 vb_exp = [[],[],[]]
 ib_exp = [[],[],[]]
@@ -57,28 +58,23 @@ for j in range(3):
   ie_t[j] = [ie_f(vbe[0] - vbe[1]) for vbe in zip(vb_exp[j], ve_t[j])]
   ic_t[j] = [ic_f(vbe[0] - vbe[1]) for vbe in zip(vb_exp[j], ve_t[j])]
 
-"""
+
 for j in range(3):
-  r = [1000, 10000, 100000][j]
-  def ir_f(Ve):
-    return Ve / r
 
-  # Do it again, but find the constants this time
-  def err_f(Vb, Ut, Is, β):
-    def ic_f(Vbe): return Is * (np.exp(Vbe/Ut) - 1)
-    def ib_f(Vbe): return (Is/β) * (np.exp(Vbe/Ut) - 1)
-    def ie_f(Vbe): return ic_f(Vbe) + ib_f(Vbe)
-    return lambda Ve: abs(ie_f(Vb - Ve) - ir_f(Ve))
+  def ic_w(Vb, Ut, Is, α, r):
+    ic = -Is + (Ut * α * lambertw(np.exp((Is*r+Vb*α)/(Ut*α))*Is*r))/r
+    # if (ic.imag != 0).any():
+    #   print("Nonzero imaginary part with params ", Ut, Is, α, r)
+    return ic.real
 
-  def ic_f(Vb, Ut, Is, β): 
-    # print(Vb, Ut, Is, β)
-    err = err_f(Vb, Ut, Is, β)
-    Ve = minimize(err, 0,  method='Nelder-Mead').x[0]
-    return Is*(np.exp((Vb - Ve)/Ut) - 1)
+  def ic_f(Vb, Ut, Is, β, r): 
+    return ic_w(Vb, Ut, Is, β/(1+β), r)
 
-  params = curve_fit(lambda Vb, Ut, Is, β: [np.log(ic_f(this_Vb, Ut, Is, β)) for this_Vb in Vb], vb_exp[j], np.log(ic_exp[j]))
+  # params = curve_fit(lambda Vb, Ut, Is, β: [np.log(ic_f(this_Vb, Ut, Is, β)) for this_Vb in Vb], vb_exp[j], np.log(ic_exp[j]))
+  # params = curve_fit(lambda Vb, Ut, Is, β, r: np.log(ic_f(Vb, Ut, Is, β, r)), vb_exp[j], np.log(ic_exp[j]), bounds = (0, np.inf))
+  params = curve_fit(ic_f, vb_exp[j], ic_exp[j], bounds = (1e-10, [1, 1, np.inf, np.inf]))[0]
   print(params)
-"""
+
 
 fig = plt.figure()
 ax = plt.subplot(111)
