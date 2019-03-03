@@ -58,11 +58,12 @@ for j in range(3):
   ie_t[j] = [ie_f(vbe[0] - vbe[1]) for vbe in zip(vb_exp[j], ve_t[j])]
   ic_t[j] = [ic_f(vbe[0] - vbe[1]) for vbe in zip(vb_exp[j], ve_t[j])]
 
-
+Ut_c, Is_c, β_c, r_c = [], [], [], []
+ic_c = [[],[],[]]
 for j in range(3):
 
   def ic_w(Vb, Ut, Is, α, r):
-    ic = -Is + (Ut * α * lambertw(np.exp((Is*r+Vb*α)/(Ut*α))*Is*r))/r
+    ic = -Is + (Ut * α * lambertw(np.exp((Is*r+Vb*α)/(Ut*α))*Is*r/(Ut*α)))/r
     # if (ic.imag != 0).any():
     #   print("Nonzero imaginary part with params ", Ut, Is, α, r)
     return ic.real
@@ -70,15 +71,36 @@ for j in range(3):
   def ic_f(Vb, Ut, Is, β, r): 
     return ic_w(Vb, Ut, Is, β/(1+β), r)
 
-  # params = curve_fit(lambda Vb, Ut, Is, β: [np.log(ic_f(this_Vb, Ut, Is, β)) for this_Vb in Vb], vb_exp[j], np.log(ic_exp[j]))
-  # params = curve_fit(lambda Vb, Ut, Is, β, r: np.log(ic_f(Vb, Ut, Is, β, r)), vb_exp[j], np.log(ic_exp[j]), bounds = (0, np.inf))
-  params = curve_fit(ic_f, vb_exp[j], ic_exp[j], bounds = (1e-10, [1, 1, np.inf, np.inf]))[0]
+  # params = curve_fit(lambda Vb, Ut, Is, β, r: np.log(ic_f(Vb, Ut, Is, β, r)), vb_exp[j], np.log(ic_exp[j]), bounds = (0, np.inf))[0]
+  # params = curve_fit(ic_f, vb_exp[j], ic_exp[j], bounds = (1e-10, [1, 1, np.inf, np.inf]))[0]
+  params = curve_fit(ic_f, vb_exp[j], ic_exp[j], p0 = [0.028, 3.343e-14, 177, 10000], bounds = ([1e-4, 1e-18, 1, 100], [1, 1e-4, 1e5, 1e8]))[0]
+  # params = curve_fit(ic_f, vb_exp[j], ic_exp[j], maxfev = 1000000)[0]
   print(params)
+  Ut_c += [params[0]]
+  Is_c += [params[1]]
+  β_c += [params[2]]
+  r_c += [params[3]]
 
+  ic_c[j] = [ic_f(Vb, Ut_c[j], Is_c[j], β_c[j], r_c[j]) for Vb in vb_exp[j]]
 
 fig = plt.figure()
 ax = plt.subplot(111)
 
+# Joined semilog V-I plot
+for i in range(3):
+  ax.plot(vb_exp[i], ic_exp[i], ['r.', 'g.', 'b.'][i], label="Measured collector current (" + rnames[i] + " Ω)")
+  ax.plot(vb_exp[i], ic_c[i], ['k--', 'k-.', 'k:'][i], label="Theoretical collector current (" + rnames[i] + "Ω)")
+
+plt.title("Emitter-Degenerated Collector Current")
+plt.xlabel("Base voltage (V)")
+plt.ylabel("Collector current (A)")
+plt.grid(True)
+ax.legend()
+plt.show()
+# plt.savefig("exp2_ic_all.pdf")
+ax.cla()
+
+"""
 # Joined semilog V-I plot
 for i in range(3):
   ax.semilogy(vb_exp[i], ic_exp[i], ['r.', 'g.', 'b.'][i], label="Measured collector current (" + rnames[i] + " Ω)")
@@ -104,4 +126,4 @@ for i in range(3):
   ax.legend()
   plt.savefig("exp2_ic_" + rnames[i] + ".pdf")
   ax.cla()
-
+"""
