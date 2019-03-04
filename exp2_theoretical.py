@@ -17,7 +17,7 @@ for i in range(3):
     with open('trans_exp2_%s.csv' % rnames[i]) as f:
         c = csv.reader(f, delimiter=",")
         next(c)
-        for _ in range(670): # Throw away bad data
+        for _ in range(670): # Throw away bad data - 670 is min?
           next(c)
         for row in c:
           vb_exp[i] += [float(row[0])]
@@ -117,7 +117,7 @@ for j in range(3):
   err = err_f(ic_c[j])
   print("log ms error = ", err)
 
-  ib_c[j] = [ic/β_c for ic in ic_c[j]]
+  ib_c[j] = [ic/(β_c[j]) for ic in ic_c[j]]
 
 
 # Find incremental resistances
@@ -161,8 +161,9 @@ for i in range(3):
 
 
 # Joined log-log inc. res. plot
-  ax.loglog(ib_exp[i], rb_exp[i], ['r.', 'g.', 'b.'][i], label="Measured incremental base resistance (" + rnames[i] + " Ω)")
-  ax.plot(ib_exp[i], rb_c[i], ['k--', 'k-.', 'k-'][i], label="Theoretical incremental base resistance (" + rnames[i] + "Ω)")
+for i in range(3):
+  ax.loglog(ib_exp[i][100:-1], rb_exp[i][100:], ['r.', 'g.', 'b.'][i], label="Measured incremental base resistance (" + rnames[i] + " Ω)")
+  ax.plot(ib_exp[i][100:-1], rb_c[i][100:], ['k--', 'k-.', 'k-'][i], label="Theoretical incremental base resistance (" + rnames[i] + "Ω)")
 
 plt.title("Emitter-Degenerated Incremental Base Resistance")
 plt.xlabel("Base current (A)")
@@ -171,4 +172,19 @@ plt.grid(True)
 ax.legend()
 # plt.show()
 plt.savefig("exp2_inc_res.pdf")
+ax.cla()
+
+
+# Joined log-log transconductance plot
+for i in range(3):
+  ax.loglog(ib_exp[i][100:-1], gm_exp[i][100:], ['r.', 'g.', 'b.'][i], label="Measured inc. trans. (" + rnames[i] + " Ω)")
+  ax.plot(ib_exp[i][100:-1], gm_c[i][100:], ['k--', 'k-.', 'k-'][i], label="Theoretical inc. trans. (" + rnames[i] + "Ω)")
+
+plt.title("Emitter-Degenerated Incremental Base-Collector Transconductance")
+plt.xlabel("Base current (A)")
+plt.ylabel("Incremental resistance (Ω)")
+plt.grid(True)
+ax.legend()
+# plt.show()
+plt.savefig("exp2_trans.pdf")
 ax.cla()
