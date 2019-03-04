@@ -182,7 +182,7 @@ for i in range(3):
 
 plt.title("Emitter-Degenerated Incremental Base-Collector Transconductance")
 plt.xlabel("Base current (A)")
-plt.ylabel("Incremental resistance (Ω)")
+plt.ylabel("Incremental transconductance gain")
 plt.grid(True)
 ax.legend()
 # plt.show()

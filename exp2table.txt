@@ -9,11 +9,11 @@ R (\textOmega) & Ut (calculated) (V)             & Is (calculated) (A)          
 \end{tabular}
 \end{table}
 
-\begin{table}[]
+\begin{table}[H]
 \small\addtolength{\tabcolsep}{-5pt}
 \begin{tabular}{|l|l|l|l|l|}
 \hline
-R (\textOmega) & Ut (calc.) (V)             & Is (calc.) (A)             & \textbeta{} (calc.)              & R (calc.) (\textOmega)           \\ \hline
+$R (\Omega)$ & $U_t (\text{calc.})(V)$             & $I_s (\text{calc.})(A)$             & $\beta{} (\text{calc.})$              & $R (\text{calc.})(\Omega)$           \\ \hline
 0           &  $2.8064 \times 10^{-2}$  &  $3.3435 \times 10^{-14}$  &  $1.7710 \times 10^{2}$  &  \\ \hline
 1k          &  $2.6252 \times 10^{-2}$  &  $5.4774 \times 10^{-15}$  &  $1.4912 \times 10^{2}$  &  $1.0101 \times 10^{3}$ \\ \hline
 10k         &  $2.6358 \times 10^{-2}$  &  $5.0730 \times 10^{-15}$  &  $4.4041 \times 10^{2}$  &  $9.9821 \times 10^{3}$ \\ \hline
