@@ -509,15 +509,15 @@ CellTagsIndex->{}
 (*NotebookFileOutline
 Notebook[{
 Cell[CellGroupData[{
-Cell[580, 22, 1728, 44, 138, "Input",ExpressionUUID->"a6d5a17d-fa10-4a39-8aea-56757d8ba52f"],
-Cell[2311, 68, 925, 24, 216, "Output",ExpressionUUID->"6f400f45-8487-434f-a25c-195f8625e2a6"]
+Cell[580, 22, 1728, 44, 108, "Input",ExpressionUUID->"a6d5a17d-fa10-4a39-8aea-56757d8ba52f"],
+Cell[2311, 68, 925, 24, 129, "Output",ExpressionUUID->"6f400f45-8487-434f-a25c-195f8625e2a6"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[3273, 97, 683, 17, 138, "Input",ExpressionUUID->"8b8324f4-dfbd-4d34-986b-a0b79d7c3495"],
-Cell[3959, 116, 1482, 44, 131, "Output",ExpressionUUID->"7a8ee3f3-d9e4-4d69-867b-00cc46ec83d7"]
+Cell[3273, 97, 683, 17, 108, "Input",ExpressionUUID->"8b8324f4-dfbd-4d34-986b-a0b79d7c3495"],
+Cell[3959, 116, 1482, 44, 101, "Output",ExpressionUUID->"7a8ee3f3-d9e4-4d69-867b-00cc46ec83d7"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[5478, 165, 178, 3, 94, "WolframAlphaLong",ExpressionUUID->"f4c87db1-ee49-47ec-a7c3-90b7376b173b"],
+Cell[5478, 165, 178, 3, 84, "WolframAlphaLong",ExpressionUUID->"f4c87db1-ee49-47ec-a7c3-90b7376b173b"],
 Cell[5659, 170, 15473, 315, 491, "Print",ExpressionUUID->"fd2118b0-1ff1-4c38-bd94-bb550edcc8cc"]
 }, Open  ]],
 Cell[21147, 488, 145, 3, 62, "Input",ExpressionUUID->"8e14f03f-4732-4e1e-ac32-5335b8ded4f4"]
