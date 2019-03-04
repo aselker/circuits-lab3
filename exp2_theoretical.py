@@ -17,7 +17,7 @@ for i in range(3):
     with open('trans_exp2_%s.csv' % rnames[i]) as f:
         c = csv.reader(f, delimiter=",")
         next(c)
-        for _ in range(700): # Throw away bad data - 600 for final, 800 for easier fit
+        for _ in range(670): # Throw away bad data
           next(c)
         for row in c:
           vb_exp[i] += [float(row[0])]
@@ -68,12 +68,13 @@ r = np.nan
 
 Ut_c, Is_c, β_c, r_c = [], [], [], []
 ic_c = [[],[],[]]
+ib_c = [[],[],[]]
 for j in range(3):
 
   def ic_w(Vb, Ut, Is, α, r):
     ic = -Is + (Ut * α * lambertw(np.exp((Is*r+Vb*α)/(Ut*α))*Is*r/(Ut*α)))/r
-    if (ic.imag != 0).any():
-      print("Nonzero imaginary part with params ", Ut, Is, α, r)
+    # if (ic.imag != 0).any():
+    #  print("Nonzero imaginary part with params ", Ut, Is, α, r)
     return ic.real
 
   def ic_f(Vb, Ut, Is, β, r): 
@@ -116,6 +117,17 @@ for j in range(3):
   err = err_f(ic_c[j])
   print("log ms error = ", err)
 
+  ib_c[j] = [ic/β_c for ic in ic_c[j]]
+
+
+# Find incremental resistances
+rb_exp, rb_c, gm_exp, gm_c = [[],[],[]], [[],[],[]], [[],[],[]], [[],[],[]]
+for j in range(3):
+  rb_exp[j] = np.diff(vb_exp[j]) / np.diff(ib_exp[j])
+  rb_c[j] = np.diff(vb_exp[j]) / np.diff(ib_c[j])
+  gm_exp[j] = np.diff(ic_exp[j]) / np.diff(vb_exp[j])
+  gm_c[j] = np.diff(ic_c[j]) / np.diff(vb_exp[j])
+
 
 fig = plt.figure()
 ax = plt.subplot(111)
@@ -123,28 +135,14 @@ ax = plt.subplot(111)
 # Joined semilog V-I plot
 for i in range(3):
   ax.semilogy(vb_exp[i], ic_exp[i], ['r.', 'g.', 'b.'][i], label="Measured collector current (" + rnames[i] + " Ω)")
-  ax.plot(vb_exp[i], ic_c[i], ['k--', 'k-.', 'k:'][i], label="Theoretical collector current (" + rnames[i] + "Ω)")
+  ax.plot(vb_exp[i], ic_c[i], ['k--', 'k-.', 'k-'][i], label="Theoretical collector current (" + rnames[i] + "Ω)")
 
 plt.title("Emitter-Degenerated Collector Current")
 plt.xlabel("Base voltage (V)")
 plt.ylabel("Collector current (A)")
 plt.grid(True)
 ax.legend()
-plt.show()
-# plt.savefig("exp2_ic_all.pdf")
-ax.cla()
-
-"""
-# Joined semilog V-I plot
-for i in range(3):
-  ax.semilogy(vb_exp[i], ic_exp[i], ['r.', 'g.', 'b.'][i], label="Measured collector current (" + rnames[i] + " Ω)")
-  ax.semilogy(vb_exp[i], ic_t[i], ['k--', 'k-.', 'k:'][i], label="Theoretical collector current (" + rnames[i] + "Ω)")
-
-plt.title("Emitter-Degenerated Collector Current")
-plt.xlabel("Base voltage (V)")
-plt.ylabel("Collector current (A)")
-plt.grid(True)
-ax.legend()
+# plt.show()
 plt.savefig("exp2_ic_all.pdf")
 ax.cla()
 
@@ -152,7 +150,7 @@ ax.cla()
 # Separate linear V-I plots
 for i in range(3):
   ax.plot(vb_exp[i], ic_exp[i], ['r.', 'g.', 'b.'][i], label="Measured collector current")
-  ax.plot(vb_exp[i], ic_t[i], ['k--', 'k-.', 'k:'][i], label="Theoretical collector current")
+  ax.plot(vb_exp[i], ic_c[i], ['k--', 'k-.', 'k-'][i], label="Theoretical collector current")
   plt.title("Emitter-Degenerated Collector Current (" + rnames[i] + " Ω)")
   plt.xlabel("Base voltage (V)")
   plt.ylabel("Collector current (A)")
@@ -160,4 +158,17 @@ for i in range(3):
   ax.legend()
   plt.savefig("exp2_ic_" + rnames[i] + ".pdf")
   ax.cla()
-"""
+
+
+# Joined log-log inc. res. plot
+  ax.loglog(ib_exp[i], rb_exp[i], ['r.', 'g.', 'b.'][i], label="Measured incremental base resistance (" + rnames[i] + " Ω)")
+  ax.plot(ib_exp[i], rb_c[i], ['k--', 'k-.', 'k-'][i], label="Theoretical incremental base resistance (" + rnames[i] + "Ω)")
+
+plt.title("Emitter-Degenerated Incremental Base Resistance")
+plt.xlabel("Base current (A)")
+plt.ylabel("Incremental resistance (Ω)")
+plt.grid(True)
+ax.legend()
+# plt.show()
+plt.savefig("exp2_inc_res.pdf")
+ax.cla()
