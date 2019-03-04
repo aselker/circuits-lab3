@@ -18,14 +18,18 @@ with open('trans.csv') as f:
         V += [float(row[0])]
         Ib += [float(row[1])]
         Ie += [-float(row[2])]
-        
-fig = plt.figure()
-ax = plt.subplot(111)
 
 Ic = np.array(Ie) - np.array(Ib)
 β = np.array(Ic) / np.array(Ib)
 
-ax.semilogx(Ib, β, 'b.', label="Base-Emitter Gain")
+# Value from experiment 1
+β_t = 177.098
+
+fig = plt.figure()
+ax = plt.subplot(111)
+
+ax.semilogx(Ib, β, 'b.', label="Measured Base-Emitter Gain")
+ax.semilogx(Ib, [β_t for _ in β], 'b-', label="Theoretical Base-Emitter Gain")
 plt.xlabel("Base current (A)")
 plt.ylabel("Gain")
 plt.title("Current Gain")
