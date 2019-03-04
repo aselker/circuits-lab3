@@ -43,14 +43,14 @@ Av, b = params[0][0], params[0][1]
 fig = plt.figure()
 ax = plt.subplot(111)
 ax.plot(vb_exp[vals[0]], ve_exp[vals[0]], '.', label="Measured Emitter Voltage")
-ax.plot(vb_exp[vals[0]], np.array(vb_exp[vals[0]])*Av+b, 'k-', label="Theorhetical Fit (Av = %f, b = %f)" % (Av,b))
+ax.plot(vb_exp[vals[0]], np.array(vb_exp[vals[0]])*Av+b, 'k-', label="Theoretical Fit no ₘR (Aᵥ = %.2f, V₀ = %.2f)" % (Av,b))
 
 
 for i in range(1,4):
-  ax.plot(vb_exp[vals[i]],ve_exp[vals[i]], label="mR= " + vals[i][5:])
+  ax.plot(vb_exp[vals[i]],ve_exp[vals[i]], label="ₘR = " + vals[i][5:])
   params = curve_fit(lambda Vb, Av, b: Vb*Av+b, vb_exp[vals[i]][valid[vals[i]][0]:valid[vals[i]][1]], ve_exp[vals[i]][valid[vals[i]][0]:valid[vals[i]][1]])
   Av, b = params[0][0], params[0][1]
-  ax.plot(vb_exp[vals[i]], np.array(vb_exp[vals[i]])*Av+b, 'k-', label="Theorhetical Fit (Av = %f, b = %f)" % (Av,b))
+  ax.plot(vb_exp[vals[i]], np.array(vb_exp[vals[i]])*Av+b, 'k-', label="Theoretical Fit %s (Aᵥ = %.2f, V₀ = %.2f)" % (vals[i][5:],Av,b))
 
 plt.title("Voltage Transfer Characteristic (VTC)")
 plt.xlabel("Base Voltage (V)")
@@ -58,5 +58,5 @@ plt.ylabel("Emitter Voltage (V)")
 plt.grid(True)
 plt.ylim(0,6)
 ax.legend()
-plt.show()
-# plt.savefig("consts.pdf")
+#plt.show()
+plt.savefig("theoretical_exp4.pdf")
