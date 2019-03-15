@@ -20,6 +20,7 @@ with open('trans.csv') as f:
 
 Ic = np.array(Ie) - np.array(Ib)
 
+# TODO: Make the theoretial fits actually functions of the X-axis variable (base current)
 
 # Constants from find-consts.py
 Ut = 0.0280641
