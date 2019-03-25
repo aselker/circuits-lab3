@@ -36,22 +36,34 @@ def ic_f(Vbe):
 rb_exp = np.diff(V) / np.diff(Ib) # Incremental base resistance
 rb_t = np.diff(V) / np.diff([ib_f(v) for v in V])
 
+rb_v = np.arange(min(V), max(V), (max(V) - min(V))/len(V))
+rb_t_both = [[],[]]
+rb_t_both[0] = [ib_f(v) for v in rb_v][:-1]
+rb_t_both[1] = np.diff(rb_v) / np.diff([ib_f(v) for v in rb_v])
+
 gm_exp = np.diff(V) / np.diff(Ic) # Incremental transconductance gain
 gm_t = np.diff(V) / np.diff([ic_f(v) for v in V])
 
+gm_v = np.arange(min(V), max(V), (max(V) - min(V))/len(V))
+gm_t_both = [[],[]]
+gm_t_both[0] = [ib_f(v) for v in gm_v][:-1]
+gm_t_both[1] = np.diff(gm_v) / np.diff([ic_f(v) for v in gm_v])
 
 def clip_range(xs, ys, bounds):
   pairs = [(x, y) for (x, y) in zip(xs, ys) if (bounds[0] <= y) and (y <= bounds[1])]
   return list(zip(*pairs))
 
+rb_exp_plot = clip_range(Ib[:-1], rb_exp, (1e0, 1e11))
+rb_t_plot = clip_range(rb_t_both[0], rb_t_both[1], (1e2, 1e7))
+
 gm_exp_plot = clip_range(Ib[:-1], gm_exp, (1e0, 1e11))
-gm_t_plot = clip_range(Ib[:-1], gm_t, (1e0, 1e11))
+gm_t_plot = clip_range(gm_t_both[0], gm_t_both[1], (1e0, 1e7))
 
 fig = plt.figure()
 ax = plt.subplot(111)
 
 ax.loglog(Ib[:-1], rb_exp, 'b.', label="Measured Base Incremental Resistance")
-ax.loglog(Ib[:-1], rb_t, 'g-', label="Theoretical Base Incremental Resistance")
+ax.loglog(rb_t_plot[0], rb_t_plot[1], 'g-', label="Theoretical Base Incremental Resistance")
 plt.xlabel("Base current (A)")
 plt.ylabel("Incremental Base Resistance (Ω)")
 plt.title("Incremental Base Resistance")
@@ -61,7 +73,6 @@ plt.savefig("rb.pdf")
 ax.cla()
 
 
-# ax.loglog(Ib[:-1], gm_exp, 'b.', label="Measured Transconductance")
 ax.loglog(gm_exp_plot[0], gm_exp_plot[1], 'b.', label="Measured Transconductance")
 ax.loglog(gm_t_plot[0], gm_t_plot[1], 'g-', label="Theoretical Transconductance")
 plt.xlabel("Base current (A)")
