@@ -44,13 +44,13 @@ rb_t_both = [[], []]
 rb_t_both[0] = [ib_f(v) for v in rb_v][:-1]
 rb_t_both[1] = np.diff(rb_v) / np.diff([ib_f(v) for v in rb_v])
 
-gm_exp = np.diff(V) / np.diff(Ic)  # Incremental transconductance gain
-gm_t = np.diff(V) / np.diff([ic_f(v) for v in V])
+gm_exp = np.diff(Ic) / np.diff(V)  # Incremental transconductance gain
+gm_t = np.diff([ic_f(v) for v in V]) / np.diff(V)
 
 gm_v = np.arange(min(V), max(V), (max(V) - min(V)) / len(V))
 gm_t_both = [[], []]
 gm_t_both[0] = [ib_f(v) for v in gm_v][:-1]
-gm_t_both[1] = np.diff(gm_v) / np.diff([ic_f(v) for v in gm_v])
+gm_t_both[1] = np.diff([ic_f(v) for v in gm_v]) / np.diff(gm_v)
 
 
 def clip_range(xs, ys, bounds):
@@ -61,8 +61,11 @@ def clip_range(xs, ys, bounds):
 rb_exp_plot = clip_range(Ib[:-1], rb_exp, (1e0, 1e11))
 rb_t_plot = clip_range(rb_t_both[0], rb_t_both[1], (1e2, 1e7))
 
-gm_exp_plot = clip_range(Ib[:-1], gm_exp, (1e0, 1e11))
-gm_t_plot = clip_range(gm_t_both[0], gm_t_both[1], (1e0, 1e7))
+gm_exp_plot = clip_range(Ib[:-1], gm_exp, (1e-8, 1e1))
+gm_t_plot = clip_range(gm_t_both[0], gm_t_both[1], (1e-7, 1e0))
+# gm_exp_plot = clip_range(Ib[:-1], gm_exp, (-np.inf, np.inf))
+# gm_t_plot = clip_range(gm_t_both[0], gm_t_both[1], (-np.inf, np.inf))
+
 
 fig = plt.figure()
 ax = plt.subplot(111)
