@@ -49,7 +49,7 @@ gm_t = np.diff([ic_f(v) for v in V]) / np.diff(V)
 
 gm_v = np.arange(min(V), max(V), (max(V) - min(V)) / len(V))
 gm_t_both = [[], []]
-gm_t_both[0] = [ib_f(v) for v in gm_v][:-1]
+gm_t_both[0] = [ic_f(v) for v in gm_v][:-1]
 gm_t_both[1] = np.diff([ic_f(v) for v in gm_v]) / np.diff(gm_v)
 
 
@@ -61,9 +61,9 @@ def clip_range(xs, ys, bounds):
 rb_exp_plot = clip_range(Ib[:-1], rb_exp, (1e0, 1e11))
 rb_t_plot = clip_range(rb_t_both[0], rb_t_both[1], (1e2, 1e7))
 
-gm_exp_plot = clip_range(Ib[:-1], gm_exp, (1e-8, 1e1))
+gm_exp_plot = clip_range(Ic[:-1], gm_exp, (1e-8, 1e1))
 gm_t_plot = clip_range(gm_t_both[0], gm_t_both[1], (1e-7, 1e0))
-# gm_exp_plot = clip_range(Ib[:-1], gm_exp, (-np.inf, np.inf))
+# gm_exp_plot = clip_range(Ic[:-1], gm_exp, (-np.inf, np.inf))
 # gm_t_plot = clip_range(gm_t_both[0], gm_t_both[1], (-np.inf, np.inf))
 
 
@@ -85,7 +85,7 @@ ax.cla()
 
 ax.loglog(gm_exp_plot[0], gm_exp_plot[1], "b.", label="Measured Transconductance")
 ax.loglog(gm_t_plot[0], gm_t_plot[1], "g-", label="Theoretical Transconductance")
-plt.xlabel("Base current (A)")
+plt.xlabel("Collector current (A)")
 plt.ylabel("Incremental Transconductance (1/Ω)")
 plt.title("Incremental Base-Collector Transconductance Gain")
 ax.legend()
